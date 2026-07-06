@@ -146,5 +146,4 @@ docker compose build --no-cache && docker compose up -d
 
 ---
 <div align="center">
-  <i>Built with ❤️ by Vu Tuan Hung</i>
 </div>
