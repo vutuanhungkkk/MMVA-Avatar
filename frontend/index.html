@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health AI Assistant – Your Medical Companion</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        /* === LAYOUT BALANCING & READABILITY === */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: #eef5f9;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            gap: 0;
+            background: #fff;
+        }
+
+        /* Sidebar - fixed compact width */
+        .sidebar {
+            flex: 0 0 290px;
+            background: #f0f7fa;
+            padding: 18px 16px;
+            overflow-y: auto;
+            border-right: 1px solid #d0d7de;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 14px;
+        }
+        .sidebar h2 { font-size: 1.3rem; margin: 0 0 8px 0; }
+        .sidebar h3 { font-size: 1rem; margin: 12px 0 4px 0; }
+        .sidebar select, .sidebar input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        .primary-btn, .danger-btn {
+            width: 100%;
+            padding: 10px 0;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .primary-btn { background: #0d9488; color: white; }
+        .primary-btn:hover { background: #0f766e; }
+        .danger-btn { background: #e74c3c; color: white; }
+        .danger-btn:hover { background: #c0392b; }
+        .status-msg { font-size: 13px; padding: 6px; background: #eef2f6; border-radius: 4px; }
+        .intro-box p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #1e293b;
+            margin: 0;
+        }
+        .author-info {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #0b1e33;
+        }
+        .info-box {
+            background: #eef2f6;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        .spacer { flex: 1; }
+
+        /* Avatar section */
+        .avatar-section {
+            flex: 1.2;
+            background: #111;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 220px;
+        }
+        #avatar {
+            width: 100%;
+            height: 100%;
+        }
+        #loading-overlay {
+            position: absolute;
+            color: #ccc;
+            font-size: 1.2rem;
+            background: rgba(0,0,0,0.6);
+            padding: 12px 24px;
+            border-radius: 40px;
+            pointer-events: none;
+        }
+
+        /* === CHAT SECTION - wider (flex: 2.5) === */
+        .chat-section {
+            flex: 2.5;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border-left: 1px solid #e2e8f0;
+            min-width: 380px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 14px 22px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #fafbfc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-header h2 { 
+            font-size: 1.3rem; 
+            margin: 0; 
+            font-weight: 600;
+        }
+        .chat-header p { 
+            margin: 0; 
+            font-size: 0.9rem; 
+            color: #475569;
+        }
+
+        /* --- CHAT HISTORY - readable font size --- */
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 28px;
+            background: #fcfcfd;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        /* User & bot messages */
+        .chat-history .message {
+            font-size: 1.05rem !important;      /* Chữ to hơn 1 xíu */
+            line-height: 1.7 !important;
+            padding: 12px 18px;
+            border-radius: 16px;
+            max-width: 85%;
+            word-wrap: break-word;
+            margin-bottom: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .chat-history .user-msg {
+            align-self: flex-end;
+            background: #0d9488;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-history .bot-msg {
+            align-self: flex-start;
+            background: #e9edf2;
+            color: #1e293b;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-history .bot-msg p, 
+        .chat-history .user-msg p {
+            margin: 0;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        /* --- INPUT AREA & TOOLS --- */
+        .chat-controls {
+            border-top: 1px solid #e2e8f0;
+            background: #fafbfc;
+            padding: 12px 20px 16px 20px;
+            flex-shrink: 0;
+        }
+        .tools-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .tools-bar button {
+            background: #eef2f6;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .tools-bar button:hover {
+            background: #dce2ea;
+        }
+        .attachment-preview {
+            margin: 2px 0 10px 0;
+            font-size: 0.92rem;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 20px;
+        }
+        .attachment-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #e0f2fe;
+            color: #075985;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .chip-remove-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #075985;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            margin-left: 2px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .chip-remove-btn:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .btn-record {
+            background: #fee2e2 !important;
+            color: #b91c1c;
+            font-weight: 600;
+        }
+        .btn-record:active {
+            background: #fecaca !important;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        #chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #d0d7de;
+            font-size: 1rem !important;   /* Larger font for better readability */
+            line-height: 1.5;
+            resize: vertical;
+            min-height: 48px;
+            max-height: 120px;
+            font-family: inherit;
+            background: white;
+        }
+        #chat-input:focus {
+            outline: 2px solid #0d9488;
+            border-color: transparent;
+        }
+        #btn-send {
+            background: #0d9488;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+            height: 48px;
+        }
+        #btn-send:hover {
+            background: #0f766e;
+        }
+
+        /* responsive nhẹ */
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; height: 100vh; }
+            .sidebar { flex: 0 0 auto; width: 100%; border-right: none; border-bottom: 1px solid #d0d7de; max-height: 45vh; }
+            .avatar-section { flex: 1; min-height: 200px; }
+            .chat-section { flex: 2; border-left: none; min-width: unset; height: 50vh; }
+            .chat-history { padding: 16px; }
+        }
+
+        /* === GLOBAL LOADING === */
+        #global-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #eef2f6;
+            border-top: 5px solid #0d9488;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #global-loading-text {
+            font-size: 1.2rem;
+            color: #0b1e33;
+            font-weight: 600;
+        }
+        #global-loading-subtext {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-top: 8px;
+            text-align: center;
+            max-width: 80%;
+        }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js/+esm",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+        "talkinghead": "./modules/talkinghead.mjs",
+        "headtts": "./modules/headtts.mjs" 
+      }
+    }
+    </script>
+</head>
+<body>
+    <!-- Global Loading Screen -->
+    <div id="global-loading">
+        <div class="spinner"></div>
+        <div id="global-loading-text">Starting Health Assistant...</div>
+        <div id="global-loading-subtext">Initializing 3D Avatar & AI TTS Model (may take a minute on first run)</div>
+    </div>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>🏥 Health AI Assistant</h2>
+            <div class="intro-box">
+                <p><strong>🌟 Introduction:</strong><br>
+                Health AI Assistant is a specialized multimodal medical companion. It securely analyzes prescriptions, explains lab results, answers health-related questions, and provides general first-aid guidance. Connects you to vital information seamlessly through voice, text, and image analysis.</p>
+            </div>
+            <div class="author-info">AUTHOR: VŨ TUẤN HÙNG</div>
+            <hr>
+            <h3>🧠 LLM Provider</h3>
+            <select id="provider-select">
+                <option value="deepseek">DeepSeek</option>
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic Claude</option>
+                <option value="google">Google Gemini</option>
+                <option value="local">Local (Qwen)</option>
+            </select>
+            <p class="note" style="font-size:12px; color:#555; margin:4px 0 2px 0;">
+                🔑 API keys are loaded from the <code>.env</code> file on the server.
+            </p>
+            <hr>
+            <h3>🔊 TTS Provider</h3>
+            <div class="info-box">Kokoro TTS</div>
+            
+            <button id="btn-apply" class="primary-btn">🚀 Apply & Start</button>
+            <div id="setup-status" class="status-msg">⚠️ Waiting for setup...</div>
+            
+            <div class="spacer"></div>
+            <hr>
+            <button id="btn-clear" class="danger-btn">🗑️ Clear Conversation</button>
+        </div>
+
+            <!-- Avatar -->
+        <div class="avatar-section">
+            <div id="avatar"></div>
+            <div id="loading-overlay">Loading Health Assistant...</div>
+        </div>
+
+        <!-- Chat section (wider layout) -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <h2>💊 Health Chat</h2>
+                <p>Status: <span id="ws-status">Connecting...</span></p>
+            </div>
+            
+            <div id="chat-history" class="chat-history"></div>
+
+            <div class="chat-controls">
+                <div class="tools-bar">
+                    <input type="file" id="image-upload" accept="image/*" hidden>
+                    <button onclick="document.getElementById('image-upload').click()">📷 Scan/Photo</button>
+                    
+                    <input type="file" id="pdf-upload" accept=".pdf,.docx,.txt,.csv,.md" hidden>
+                    <button onclick="document.getElementById('pdf-upload').click()">📋 Medical Record</button>
+                    
+                    <button id="btn-record" class="btn-record">🎙️ Describe Symptoms</button>
+                </div>
+                <div id="attachment-preview" class="attachment-preview"></div>
+                
+                <div class="input-area">
+                    <textarea id="chat-input" rows="2" placeholder="Describe your symptoms or ask a health question..."></textarea>
+                    <button id="btn-send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/avatar.js?v=2"></script>
+    <script src="./js/app.js?v=4"></script>
+</body>
+</html>

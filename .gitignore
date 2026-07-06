@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Large files and models
+*.gguf
+*.onnx
+*.bin
+*.pt
+*.pth
+*.safetensors
+models/
+model/
+
+# Environment
+.env
+*.env
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
