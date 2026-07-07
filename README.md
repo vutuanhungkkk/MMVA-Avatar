@@ -1,7 +1,7 @@
 <div align="center">
   <h1>🤖 MMVA</h1>
   <h3>Medical Multimodal Voice Assistant</h3>
-  <p>A production-ready, multi-modal AI assistant supporting <b>text, voice, and image</b> inputs with <b>RAG</b>, <b>tool calling</b>, <b>streaming TTS</b>, and support for multiple LLM backends.</p>
+  <p>A multi-modal AI assistant supporting <b>docs, voice, and image</b> inputs with <b>RAG</b>, <b>tool calling</b>, <b>streaming TTS</b>, and support for multiple LLM backends.</p>
   
   [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org)
   [![FastAPI](https://img.shields.io/badge/FastAPI-0.103+-009688.svg)](https://fastapi.tiangolo.com)
@@ -146,5 +146,4 @@ docker compose build --no-cache && docker compose up -d
 
 ---
 <div align="center">
-  <i>Built with ❤️ by Vu Tuan Hung</i>
 </div>
