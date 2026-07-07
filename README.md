@@ -12,7 +12,7 @@
 ---
 
 <div align="center">
-  <img src="gif/test.gif" alt="MMVA Demo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <img src="gif/gif.gif" alt="MMVA Demo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 </div>
 
 ---

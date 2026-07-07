@@ -63,7 +63,7 @@ OLLAMA_CPP_MODEL_PATH = os.getenv("OLLAMA_CPP_MODEL_PATH", os.path.join(_BACKEND
 # Number of GPU layers to offload (0 = CPU only, -1 = all layers)
 OLLAMA_CPP_N_GPU_LAYERS = int(os.getenv("OLLAMA_CPP_N_GPU_LAYERS", "-1") or -1)
 # Context size (tokens)
-OLLAMA_CPP_CONTEXT_SIZE = int(os.getenv("OLLAMA_CPP_CONTEXT_SIZE", "2048") or 2048)
+OLLAMA_CPP_CONTEXT_SIZE = int(os.getenv("OLLAMA_CPP_CONTEXT_SIZE", "8192") or 8192)
 OLLAMA_CPP_CLIP_MODEL_PATH = os.getenv("OLLAMA_CPP_CLIP_MODEL_PATH", os.path.join(_BACKEND_DIR, "models", "mmproj-BF16.gguf")).strip()
 
 # Backward compatibility: if no GGUF path set but legacy LM Studio vars exist, log warning
