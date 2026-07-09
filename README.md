@@ -12,6 +12,7 @@
 ---
 
 <div align="center">
+  <b>DEMO: 🔗 <a href="https://drive.google.com/file/d/1li6-WH0CSgZ0JbLUKnrrVFKck8IDCVtV/view?usp=sharing">Demo Video</a></b><br><br>
   <img src="gif/gif.gif" alt="MMVA Demo" width="100%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 </div>
 
