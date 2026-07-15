@@ -13,12 +13,19 @@ from assistant.config import (
     RAG_CHUNK_OVERLAP,
     RAG_NUM_RETRIEVED,
 )
-from assistant.utils import log
+from assistant.utils import log, log_system_metrics
+from backend.services.hybrid_retrieval import reciprocal_rank_fusion
+import time
 
 class RAGService:
     def __init__(self):
         self.vectorstore = None
         self._reranker = None
+        self._lexical_word_vectorizer = None
+        self._lexical_word_matrix = None
+        self._lexical_char_vectorizer = None
+        self._lexical_char_matrix = None
+        self._lexical_documents = []
         if RAG_ENABLED:
             self._load_vectorstore()
             existing_count = self._vectorstore_count()
@@ -101,10 +108,16 @@ class RAGService:
         return chunks
 
     def _format_documents(self, docs: List[Any]) -> str:
+        """Format untrusted evidence with stable, user-visible citations."""
         parts = []
         for doc in docs:
-            parts.append(f"{getattr(doc, 'page_content', str(doc))}\n")
-        return "\n".join(parts)
+            metadata = getattr(doc, "metadata", {}) or {}
+            source = os.path.basename(str(metadata.get("source", "unknown")))
+            page = metadata.get("page")
+            location = f"page {page}" if page is not None else f"chunk {metadata.get('chunk', '?')}"
+            citation = f"[{source}, {location}]"
+            parts.append(f"{citation}\n{getattr(doc, 'page_content', str(doc))}")
+        return "\n\n".join(parts)
 
     def _rerank_documents(self, query: str, docs: List[Any], top_n: int = 5) -> List[Any]:
         if not docs:
@@ -136,38 +149,127 @@ class RAGService:
             top_docs.append(doc)
         return top_docs
 
+    def _build_lexical_index(self, texts: List[str], metadatas: List[dict]) -> None:
+        """Build the word + character TF-IDF side of hybrid retrieval."""
+        if not texts:
+            self._lexical_documents = []
+            return
+        try:
+            from langchain_core.documents import Document
+            from sklearn.feature_extraction.text import TfidfVectorizer
+
+            self._lexical_word_vectorizer = TfidfVectorizer(
+                lowercase=True, ngram_range=(1, 2), sublinear_tf=True
+            )
+            self._lexical_char_vectorizer = TfidfVectorizer(
+                analyzer="char_wb", lowercase=True, ngram_range=(3, 5), min_df=2, sublinear_tf=True
+            )
+            self._lexical_word_matrix = self._lexical_word_vectorizer.fit_transform(texts)
+            self._lexical_char_matrix = self._lexical_char_vectorizer.fit_transform(texts)
+            self._lexical_documents = [
+                Document(page_content=text, metadata=dict(metadata))
+                for text, metadata in zip(texts, metadatas)
+            ]
+            log(f"Lexical index built with {len(texts)} chunk(s).", title="RAG", style="bold green")
+        except Exception as exc:
+            self._lexical_documents = []
+            log(f"Lexical index unavailable: {exc}", title="RAG", style="bold yellow")
+
+    def _refresh_lexical_index_from_vectorstore(self) -> None:
+        if not self.vectorstore:
+            return
+        try:
+            payload = getattr(self.vectorstore, "_collection").get(include=["documents", "metadatas"])
+            texts = list(payload.get("documents") or [])
+            metadatas = list(payload.get("metadatas") or [{} for _ in texts])
+            self._build_lexical_index(texts, metadatas)
+        except Exception as exc:
+            log(f"Could not restore lexical index: {exc}", title="RAG", style="bold yellow")
+
+    def _lexical_search(self, query: str, k: int, source_filter: Optional[str] = None) -> List[Any]:
+        if not self._lexical_documents or self._lexical_word_vectorizer is None:
+            return []
+        try:
+            import numpy as np
+
+            word_query = self._lexical_word_vectorizer.transform([query])
+            char_query = self._lexical_char_vectorizer.transform([query])
+            word_scores = (word_query @ self._lexical_word_matrix.T).toarray()[0]
+            char_scores = (char_query @ self._lexical_char_matrix.T).toarray()[0]
+            scores = 0.65 * word_scores + 0.35 * char_scores
+            order = np.argsort(-scores, kind="stable")
+            filter_name = os.path.basename(source_filter).lower() if source_filter else None
+            results = []
+            for index in order:
+                document = self._lexical_documents[int(index)]
+                source = os.path.basename(str(document.metadata.get("source", ""))).lower()
+                if filter_name and filter_name not in source:
+                    continue
+                metadata = dict(document.metadata)
+                metadata["lexical_score"] = float(scores[int(index)])
+                document.metadata = metadata
+                results.append(document)
+                if len(results) >= k:
+                    break
+            return results
+        except Exception as exc:
+            log(f"Lexical retrieval failed: {exc}", title="RAG", style="bold yellow")
+            return []
     def search_knowledge_base(self, query: str, top_k: int = 10, rerank_k: int = 5, source_filter: Optional[str] = None) -> str:
         if not self.vectorstore:
             return ""
         search_query = query.strip() or query
-        fetch_k = top_k * 4 if source_filter else top_k
-        docs = []
+        candidate_k = max(top_k * 4, 20)
+
+        dense_started = time.time()
         try:
-            docs = self.vectorstore.similarity_search(search_query, k=fetch_k)
+            dense_docs = self.vectorstore.similarity_search(search_query, k=candidate_k)
         except Exception:
             try:
-                retriever = self.vectorstore.as_retriever(search_kwargs={"k": fetch_k})
-                docs = retriever.get_relevant_documents(search_query)
+                retriever = self.vectorstore.as_retriever(search_kwargs={"k": candidate_k})
+                dense_docs = retriever.get_relevant_documents(search_query)
             except Exception as exc:
-                log(f"KB retrieval failed: {exc}", title="RAG", style="bold yellow")
-                docs = []
-        if not docs:
-            log("No documents retrieved from vectorstore.", title="RAG", style="bold yellow")
-            return ""
+                log(f"Dense retrieval failed: {exc}", title="RAG", style="bold yellow")
+                dense_docs = []
+        dense_ms = (time.time() - dense_started) * 1000
+
         if source_filter:
             filter_name = os.path.basename(source_filter).lower()
-            filtered = [d for d in docs if filter_name in os.path.basename(d.metadata.get("source", "")).lower()]
-            if filtered:
-                docs = filtered
-                log(f"Source filter '{filter_name}': {len(docs)} chunk(s) kept.", title="RAG", style="bold cyan")
-            else:
-                docs = []
-                log(f"Source filter '{filter_name}' matched 0 chunks. Returning empty.", title="RAG", style="bold yellow")
-        log(f"Retrieved {len(docs)} chunk(s) from vectorstore.", title="RAG", style="bold cyan")
-        reranked = self._rerank_documents(search_query, docs, top_n=rerank_k)
-        return self._format_documents(reranked)
+            dense_docs = [
+                doc for doc in dense_docs
+                if filter_name in os.path.basename(str(doc.metadata.get("source", ""))).lower()
+            ]
+
+        lexical_started = time.time()
+        lexical_docs = self._lexical_search(search_query, candidate_k, source_filter=source_filter)
+        lexical_ms = (time.time() - lexical_started) * 1000
+
+        fused_docs = reciprocal_rank_fusion(
+            [dense_docs, lexical_docs], limit=candidate_k, rank_constant=10, weights=[0.35, 1.0]
+        )
+        if not fused_docs:
+            log("No documents retrieved from dense or lexical index.", title="RAG", style="bold yellow")
+            return ""
+
+        use_reranker = os.getenv("RAG_ENABLE_RERANKER", "false").strip().lower() in {"1", "true", "yes"}
+        rerank_ms = 0.0
+        if use_reranker:
+            rerank_started = time.time()
+            final_docs = self._rerank_documents(search_query, fused_docs, top_n=rerank_k)
+            rerank_ms = (time.time() - rerank_started) * 1000
+        else:
+            final_docs = fused_docs[:rerank_k]
+        log(
+            f"Hybrid retrieval: dense={len(dense_docs)} ({dense_ms:.1f} ms), "
+            f"lexical={len(lexical_docs)} ({lexical_ms:.1f} ms), "
+            f"fused={len(fused_docs)}, reranker={use_reranker} ({rerank_ms:.1f} ms)",
+            title="Metrics: RAG",
+            style="bold cyan",
+        )
+        return self._format_documents(final_docs)
 
     def _load_documents_into_vectorstore(self) -> None:
+        start_time = time.time()
         try:
             HuggingFaceEmbeddings = importlib.import_module("langchain_huggingface").HuggingFaceEmbeddings
             Chroma = importlib.import_module("langchain_chroma").Chroma
@@ -189,13 +291,24 @@ class RAGService:
             log("No supported documents found for RAG build.", title="RAG", style="bold yellow")
             self.vectorstore = None
             return
+
+        chunking_time = time.time() - start_time
+        log(f"Document Parsing & Chunking Time: {chunking_time:.3f} s", title="Metrics: RAG", style="bold cyan")
+
+        ingestion_start = time.time()
         shutil.rmtree(RAG_VECTOR_DB_DIR, ignore_errors=True)
         os.makedirs(RAG_VECTOR_DB_DIR, exist_ok=True)
         embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={"device": self._embedding_device()})
         texts = [item["text"] for item in documents]
         metadatas = [{"source": item["source"], "chunk": item["chunk"], "type": item["type"]} for item in documents]
         self.vectorstore = Chroma.from_texts(texts=texts, embedding=embeddings, metadatas=metadatas, persist_directory=RAG_VECTOR_DB_DIR)
-        log(f"Built RAG vectorstore with {len(texts)} chunk(s).", title="RAG", style="bold green")
+        self._build_lexical_index(texts, metadatas)
+
+        ingestion_time = time.time() - ingestion_start
+        total_time = time.time() - start_time
+        log(f"Built RAG vectorstore with {len(texts)} chunk(s). Ingestion Time: {ingestion_time:.3f} s | Total: {total_time:.3f} s", title="RAG", style="bold green")
+
+        log_system_metrics("Metrics: Post-Ingestion System Resources")
 
     def _load_vectorstore(self) -> None:
         try:
@@ -203,6 +316,7 @@ class RAGService:
             Chroma = importlib.import_module("langchain_chroma").Chroma
             embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={"device": self._embedding_device()})
             self.vectorstore = Chroma(persist_directory=RAG_VECTOR_DB_DIR, embedding_function=embeddings)
+            self._refresh_lexical_index_from_vectorstore()
             count = None
             try:
                 count = getattr(self.vectorstore, "_collection").count()

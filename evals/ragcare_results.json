@@ -1,0 +1,466 @@
+{
+  "word_tfidf": {
+    "overall": {
+      "cases": 420,
+      "recall@1": 0.6261904761904762,
+      "recall@3": 0.819047619047619,
+      "recall@5": 0.8452380952380952,
+      "recall@10": 0.888095238095238,
+      "mrr": 0.7268815238196794,
+      "median_rank": 1
+    },
+    "slices": {
+      "complexity:advanced": {
+        "cases": 89,
+        "recall@1": 0.8202247191011236,
+        "recall@3": 0.9325842696629213,
+        "recall@5": 0.9550561797752809,
+        "recall@10": 0.9662921348314607,
+        "mrr": 0.8794319132568548,
+        "median_rank": 1
+      },
+      "complexity:basic": {
+        "cases": 150,
+        "recall@1": 0.5,
+        "recall@3": 0.7266666666666667,
+        "recall@5": 0.7533333333333333,
+        "recall@10": 0.8066666666666666,
+        "mrr": 0.6181668590289668,
+        "median_rank": 1
+      },
+      "complexity:intermediate": {
+        "cases": 181,
+        "recall@1": 0.6353591160220995,
+        "recall@3": 0.8397790055248618,
+        "recall@5": 0.8674033149171271,
+        "recall@10": 0.9171270718232044,
+        "mrr": 0.7419655849174601,
+        "median_rank": 1
+      },
+      "pipeline:Basic RAG": {
+        "cases": 315,
+        "recall@1": 0.6158730158730159,
+        "recall@3": 0.8,
+        "recall@5": 0.8253968253968254,
+        "recall@10": 0.8761904761904762,
+        "mrr": 0.714509548314393,
+        "median_rank": 1
+      },
+      "pipeline:Graph-enhanced RAG": {
+        "cases": 23,
+        "recall@1": 0.9130434782608695,
+        "recall@3": 1,
+        "recall@5": 1,
+        "recall@10": 1,
+        "mrr": 0.9565217391304348,
+        "median_rank": 1
+      },
+      "pipeline:Multi-vector RAG": {
+        "cases": 82,
+        "recall@1": 0.5853658536585366,
+        "recall@3": 0.8414634146341463,
+        "recall@5": 0.8780487804878049,
+        "recall@10": 0.9024390243902439,
+        "mrr": 0.7099967351857513,
+        "median_rank": 1
+      }
+    },
+    "failures_over_5": [
+      {
+        "row": 348,
+        "rank": 406,
+        "question": "8. What measures improve the survival of a patient with ARDS? This concerns a 28-year-old man, 182 cm, 100 kg, with H1N1 influenza. His current PaO2 is 9.1 kPa, and we are ventilating him with 90% oxygen.\nA. Vt 800 ml, prone ventilation, as much spontaneous breathing on the ventilator as possible\nB. Vt 500 ml, prone ventilation, controlled modes of ventilation, conservative fluid intake\nC. Vt 500 ml, supine ventilation, corticosteroids, omega-3 fatty acids in the diet\nD. Any ventilator settings as long as SpO2 is above 92%",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "530",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 268,
+        "rank": 405,
+        "question": "Urgent referral for a patient with acute low back pain (combination):\na) If the pain lasts for more than 1 month.\nb) If the pain persists after physiotherapy.\nc) If no cause for the pain is found.\nd) If the patient presents with cauda equina syndrome or acute paresis.\ne) If the patient has a history of chronic back pain.",
+        "expected_reference": "Družinska medicina, Združenja zdravnikov družinske medicine - SZD 2012",
+        "expected_page": "19",
+        "top_reference": "Koes, B. W., van Tulder, M. W., Ostelo, R., Kim Burton, A., & Waddell, G. (2006). Clinical guidelines for the management of low back pain in primary care: an international perspective"
+      },
+      {
+        "row": 225,
+        "rank": 401,
+        "question": "8. What are precancerous changes of the gastric mucosa?\na) atrophic gastritis\nb) intestinal metaplasia\nc) adenomatous polyp\nd) endocrine cell hyperplasia\n\nA) a, b\nB) a, b, c\nC) a, c\nD) b, c\nE) a, b, c, d",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "576",
+        "top_reference": "1. Aelvoet, A. S., Pellisé, M., Miedema, T. N., Daca-Alvarez, M., Bastiaansen, B. A. J., van Leerdam, M. E., Jover, R., Balaguer, F., Kaminski, M. F., Buttitta, F., Ricciardiello, L., Jespersen, N., Karstensen, J. G., Bossuyt, P. M. M., Latchford, A., Hompes, R., Dekker, E., & European FAP Consortium. (2024). Development of desmoid tumors after ileorectal anastomosis versus ileal pouch–anal anastomosis in familial adenomatous polyposis. Clinical Gastroenterology and Hepatology, 22(11), 2319–2326.\n2. Quinn, K. P., Lightner, A. L., Pendegraft, R. S., Enders, F. T., Boardman, L. A., & Raffals, L. E. (2016). Pouchitis is a common complication in patients with familial adenomatous polyposis following ileal pouch–anal anastomosis. Clinical Gastroenterology and Hepatology, 14(9), 1296–1301."
+      },
+      {
+        "row": 198,
+        "rank": 398,
+        "question": "17. Determine which heart chamber has the correctly stated normal pressure value.\na. The mean pressure in the right atrium is 1–5 mmHg\nb. The systolic pressure in the pulmonary artery is 35–45 mmHg\nc. The pulmonary capillary wedge (occlusion) pressure is 20–25 mmHg\nd. The left ventricular end-diastolic pressure is 15–20 mmHg\ne. The left ventricular end-diastolic pressure is 50–80 mmHg",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "175",
+        "top_reference": "Cardiovascular Disease and Risk Management: Standards of Care in Diabetes—2024. Diabetes Care 2024"
+      },
+      {
+        "row": 174,
+        "rank": 394,
+        "question": "25. What is a common cause of secondary adrenal insufficiency?\na) Long-term glucocorticoid therapy\nb) Autoimmune destruction of adrenal cortex\nc) Adrenal tuberculosis\nd) Congenital adrenal hyperplasia\ne) Adrenal metastases",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "2",
+        "top_reference": "Harrison’s Principles of Internal Medicine, 20th ed."
+      },
+      {
+        "row": 102,
+        "rank": 393,
+        "question": "What is the limit for lower-risk drinking for men in Slovenia?\n\na) Up to 7 units of alcohol weekly or up to 3 units on a single drinking occasion.\nb) Up to 10 units of alcohol weekly or up to 4 units on a single drinking occasion.\nc) Up to 14 units of alcohol weekly or up to 5 units on a single drinking occasion.\nd) Up to 21 units of alcohol weekly, with no limit per occasion.\ne) No specific limits, as long as it doesn't lead to intoxication.",
+        "expected_reference": "Družinska medicina, Združenja zdravnikov družinske medicine - SZD 2012",
+        "expected_page": "102",
+        "top_reference": "Harrison’s Principles of Internal Medicine, 20th ed."
+      },
+      {
+        "row": 66,
+        "rank": 390,
+        "question": "7. The most common source of lower gastrointestinal bleeding is:\nA. angiodysplasia\nB. diverticula in the ascending colon\nC. colonic varices\nD. diverticula in the sigmoid colon\nE. Crohn’s disease",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "28",
+        "top_reference": "Harrison’s Principles of Internal Medicine, 20th ed."
+      },
+      {
+        "row": 113,
+        "rank": 388,
+        "question": "8. Which syndrome is characterized by medullary thyroid cancer, pheochromocytoma, and parathyroid hyperplasia?\na. MEN 1\nb. MEN 2A\nc. MEN 2B\nd. Li–Fraumeni syndrome\ne. Von Hippel–Lindau syndrome",
+        "expected_reference": "Strojan, P., & Hočevar, M. (Eds.). (2018). Onkologija: Učbenik za študente medicine [Oncology: Textbook for medical students] (1st ed.). Onkološki inštitut Ljubljana.",
+        "expected_page": "413",
+        "top_reference": "Strojan, P., & Hočevar, M. (Eds.). (2018). Onkologija: Učbenik za študente medicine [Oncology: Textbook for medical students] (1st ed.). Onkološki inštitut Ljubljana."
+      },
+      {
+        "row": 35,
+        "rank": 386,
+        "question": "4. What are the appropriate next steps for a 50-year-old patient who has been taking amiodarone for several years and presents with hypothyroidism?\na) Start treatment with L-thyroxine\nb) Start treatment with antithyroid drugs\nc) Discontinue amiodarone\nd) Do not discontinue amiodarone\ne) Start treatment with glucocorticoids",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "774",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 80,
+        "rank": 386,
+        "question": "When do you not introduce an antihypertensive drug and try to lower blood pressure non-pharmacologically? a) in young people\nb) in mild arterial hypertension\nc) in the elderly\nd) in patients with organ damage\ne) in patients with diabetes mellitus",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "289",
+        "top_reference": "American College of Obstetricians and Gynecologists (ACOG) Practice Bulletin No. 195: Counseling About Contraception for Women With Medical Conditions (Reaffirmed 2021)."
+      },
+      {
+        "row": 85,
+        "rank": 384,
+        "question": "Normal waist circumference for women?\na) up to 80 cm\nb) over 90 cm\nc) between 80 and 88 cm\nd) over 100 cm\ne) up to 70 cm",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "259",
+        "top_reference": "Intellia Therapeutics. (2024). MAGNITUDE: Phase 3 study to evaluate NTLA-2001 in participants with transthyretin amyloidosis with cardiomyopathy (ATTR-CM). NHS Clinical Trials Registry."
+      },
+      {
+        "row": 76,
+        "rank": 380,
+        "question": "17. Mark the most common cause of chronic inflammation of the pancreas:\nA. pancreas divisum\nB. obstruction\nC. alcohol\nD. injury\nE. hyperparathyroidism",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "632",
+        "top_reference": "El-Radhi, A. S. (2012). Fever in Children: Diagnosis and Management. Springer."
+      },
+      {
+        "row": 153,
+        "rank": 380,
+        "question": "4. Which of the following is a feature of successfully treated acromegaly?\na) IGF-1 concentration remains high\nb) MRI always shows residual tumor\nc) GH drops below 0.4 μg/L during OGTT\nd) GH rises during OGTT\ne) Mortality increases",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "743",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 65,
+        "rank": 377,
+        "question": "6.  The cause of epigastric pain can be outside of the abdomen:\nA. cerebrovascular insult (stroke)\nB. fracture of the first lumbar vertebra\nC. inferior wall myocardial infarction (MI)\nD. nephrolithiasis\nE. ectopic pregnancy",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "17",
+        "top_reference": "Thygesen, K., Alpert, J. S., Jaffe, A. S., Chaitman, B. R., Bax, J. J., Morrow, D. A., ... & White, H. D. (2018). Fourth universal definition of myocardial infarction (2018). Journal of the American College of Cardiology, 72(18),"
+      },
+      {
+        "row": 43,
+        "rank": 365,
+        "question": "12. Which lab values are typical of hyperthyroidism caused by thyroid disease?\na) Low TSH, high free T4, high free T3\nb) High TSH, normal free T4, normal free T3\nc) Low TSH, low free T4, low free T3\nd) High TSH, low free T4, low free T3\ne) High TSH, high free T4, high free T3",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "766",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 165,
+        "rank": 364,
+        "question": "16. What is a typical biochemical marker of acromegaly during an oral glucose tolerance test (OGTT)?\na) GH increases after glucose ingestion\nb) GH fails to suppress below 0.4 μg/L\nc) TSH decreases\nd) IGF-1 drops significantly\ne) Insulin secretion is absent",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "743",
+        "top_reference": "Classification and Diagnosis of Diabetes: Standards of Medical Care in Diabetes—2024. Diabetes Care."
+      },
+      {
+        "row": 96,
+        "rank": 361,
+        "question": "Most common causative agents of bronchitis?\na) Viruses\nb) Streptococcus\nc) Pneumococcus\nd) Mycoplasma\ne) Fungi",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "394",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 81,
+        "rank": 352,
+        "question": "When do you immediately introduce therapy for newly diagnosed hypertension?\n\na) measured blood pressure above 180/110 mmHg\nb) if the patient refuses to change their lifestyle habits\nc) if the patient has a family history of hypertension\nd) if the patient has a sedentary lifestyle\ne) if the patient is under stress",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "289",
+        "top_reference": "Cardiovascular Disease and Risk Management: Standards of Care in Diabetes—2024. Diabetes Care 2024"
+      },
+      {
+        "row": 82,
+        "rank": 349,
+        "question": "When do you immediately introduce therapy for newly diagnosed arterial hypertension?\n\na) you suspect they won't attend follow-up appointments\nb) over 65 years old\nc) systolic blood pressure above 155 mmHg\nd) not willing to change their lifestyle\ne) diastolic blood pressure above 95 mmHg",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "289",
+        "top_reference": "Whelton PK, Carey RM, Aronow WS, et al. 2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults: A Report of the American College of Cardiology/American Heart Association Task Force on Clinical Practice Guidelines. J Am Coll Cardiol. 2018;71(19."
+      },
+      {
+        "row": 46,
+        "rank": 335,
+        "question": "15. In which conditions are neck veins often distended?\na) Grade I goiter\nb) Grade II goiter\nc) Grade IV goiter\nd) Tricuspid valve insufficiency\ne) Subacute thyroiditis",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "125",
+        "top_reference": "Strojan, P., & Hočevar, M. (Eds.). (2018). Onkologija: Učbenik za študente medicine [Oncology: Textbook for medical students] (1st ed.). Onkološki inštitut Ljubljana."
+      }
+    ]
+  },
+  "hybrid_tfidf": {
+    "overall": {
+      "cases": 420,
+      "recall@1": 0.6880952380952381,
+      "recall@3": 0.8357142857142857,
+      "recall@5": 0.8690476190476191,
+      "recall@10": 0.9047619047619048,
+      "mrr": 0.7707026346200325,
+      "median_rank": 1
+    },
+    "slices": {
+      "complexity:advanced": {
+        "cases": 89,
+        "recall@1": 0.8539325842696629,
+        "recall@3": 0.9550561797752809,
+        "recall@5": 0.9662921348314607,
+        "recall@10": 0.9775280898876404,
+        "mrr": 0.9038205084553399,
+        "median_rank": 1
+      },
+      "complexity:basic": {
+        "cases": 150,
+        "recall@1": 0.5533333333333333,
+        "recall@3": 0.72,
+        "recall@5": 0.7666666666666667,
+        "recall@10": 0.8333333333333334,
+        "mrr": 0.6536179909619977,
+        "median_rank": 1
+      },
+      "complexity:intermediate": {
+        "cases": 181,
+        "recall@1": 0.7182320441988951,
+        "recall@3": 0.8729281767955801,
+        "recall@5": 0.9060773480662984,
+        "recall@10": 0.9281767955801105,
+        "mrr": 0.8022783571468992,
+        "median_rank": 1
+      },
+      "pipeline:Basic RAG": {
+        "cases": 315,
+        "recall@1": 0.6825396825396826,
+        "recall@3": 0.819047619047619,
+        "recall@5": 0.8603174603174604,
+        "recall@10": 0.9047619047619048,
+        "mrr": 0.7630633885232854,
+        "median_rank": 1
+      },
+      "pipeline:Graph-enhanced RAG": {
+        "cases": 23,
+        "recall@1": 0.9130434782608695,
+        "recall@3": 1,
+        "recall@5": 1,
+        "recall@10": 1,
+        "mrr": 0.9492753623188406,
+        "median_rank": 1
+      },
+      "pipeline:Multi-vector RAG": {
+        "cases": 82,
+        "recall@1": 0.6463414634146342,
+        "recall@3": 0.8536585365853658,
+        "recall@5": 0.8658536585365854,
+        "recall@10": 0.8780487804878049,
+        "mrr": 0.7499610466127494,
+        "median_rank": 1
+      }
+    },
+    "failures_over_5": [
+      {
+        "row": 268,
+        "rank": 403,
+        "question": "Urgent referral for a patient with acute low back pain (combination):\na) If the pain lasts for more than 1 month.\nb) If the pain persists after physiotherapy.\nc) If no cause for the pain is found.\nd) If the patient presents with cauda equina syndrome or acute paresis.\ne) If the patient has a history of chronic back pain.",
+        "expected_reference": "Družinska medicina, Združenja zdravnikov družinske medicine - SZD 2012",
+        "expected_page": "19",
+        "top_reference": "Koes, B. W., van Tulder, M. W., Ostelo, R., Kim Burton, A., & Waddell, G. (2006). Clinical guidelines for the management of low back pain in primary care: an international perspective"
+      },
+      {
+        "row": 165,
+        "rank": 402,
+        "question": "16. What is a typical biochemical marker of acromegaly during an oral glucose tolerance test (OGTT)?\na) GH increases after glucose ingestion\nb) GH fails to suppress below 0.4 μg/L\nc) TSH decreases\nd) IGF-1 drops significantly\ne) Insulin secretion is absent",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "743",
+        "top_reference": "Classification and Diagnosis of Diabetes: Standards of Medical Care in Diabetes—2024. Diabetes Care."
+      },
+      {
+        "row": 153,
+        "rank": 401,
+        "question": "4. Which of the following is a feature of successfully treated acromegaly?\na) IGF-1 concentration remains high\nb) MRI always shows residual tumor\nc) GH drops below 0.4 μg/L during OGTT\nd) GH rises during OGTT\ne) Mortality increases",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "743",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 85,
+        "rank": 400,
+        "question": "Normal waist circumference for women?\na) up to 80 cm\nb) over 90 cm\nc) between 80 and 88 cm\nd) over 100 cm\ne) up to 70 cm",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "259",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 97,
+        "rank": 400,
+        "question": "How do we initially treat low back pain?\na) With diazepam\nb) With tramadol\nc) Oral paracetamol\nd) Morphine i.m.\ne) Immobilization",
+        "expected_reference": "Družinska medicina, Združenja zdravnikov družinske medicine - SZD 2012",
+        "expected_page": "21",
+        "top_reference": "Koes, B. W., van Tulder, M. W., Ostelo, R., Kim Burton, A., & Waddell, G. (2006). Clinical guidelines for the management of low back pain in primary care: an international perspective"
+      },
+      {
+        "row": 66,
+        "rank": 397,
+        "question": "7. The most common source of lower gastrointestinal bleeding is:\nA. angiodysplasia\nB. diverticula in the ascending colon\nC. colonic varices\nD. diverticula in the sigmoid colon\nE. Crohn’s disease",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "28",
+        "top_reference": "Harrison’s Principles of Internal Medicine, 20th ed."
+      },
+      {
+        "row": 76,
+        "rank": 397,
+        "question": "17. Mark the most common cause of chronic inflammation of the pancreas:\nA. pancreas divisum\nB. obstruction\nC. alcohol\nD. injury\nE. hyperparathyroidism",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "632",
+        "top_reference": "El-Radhi, A. S. (2012). Fever in Children: Diagnosis and Management. Springer."
+      },
+      {
+        "row": 46,
+        "rank": 396,
+        "question": "15. In which conditions are neck veins often distended?\na) Grade I goiter\nb) Grade II goiter\nc) Grade IV goiter\nd) Tricuspid valve insufficiency\ne) Subacute thyroiditis",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "125",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 102,
+        "rank": 396,
+        "question": "What is the limit for lower-risk drinking for men in Slovenia?\n\na) Up to 7 units of alcohol weekly or up to 3 units on a single drinking occasion.\nb) Up to 10 units of alcohol weekly or up to 4 units on a single drinking occasion.\nc) Up to 14 units of alcohol weekly or up to 5 units on a single drinking occasion.\nd) Up to 21 units of alcohol weekly, with no limit per occasion.\ne) No specific limits, as long as it doesn't lead to intoxication.",
+        "expected_reference": "Družinska medicina, Združenja zdravnikov družinske medicine - SZD 2012",
+        "expected_page": "102",
+        "top_reference": "OECD/European Observatory on Health Systems and Policies. (2023). Slovenia: Country Health Profile 2023, State of Health in the EU. OECD Publishing, Paris"
+      },
+      {
+        "row": 348,
+        "rank": 396,
+        "question": "8. What measures improve the survival of a patient with ARDS? This concerns a 28-year-old man, 182 cm, 100 kg, with H1N1 influenza. His current PaO2 is 9.1 kPa, and we are ventilating him with 90% oxygen.\nA. Vt 800 ml, prone ventilation, as much spontaneous breathing on the ventilator as possible\nB. Vt 500 ml, prone ventilation, controlled modes of ventilation, conservative fluid intake\nC. Vt 500 ml, supine ventilation, corticosteroids, omega-3 fatty acids in the diet\nD. Any ventilator settings as long as SpO2 is above 92%",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "530",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 43,
+        "rank": 395,
+        "question": "12. Which lab values are typical of hyperthyroidism caused by thyroid disease?\na) Low TSH, high free T4, high free T3\nb) High TSH, normal free T4, normal free T3\nc) Low TSH, low free T4, low free T3\nd) High TSH, low free T4, low free T3\ne) High TSH, high free T4, high free T3",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "766",
+        "top_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča."
+      },
+      {
+        "row": 82,
+        "rank": 395,
+        "question": "When do you immediately introduce therapy for newly diagnosed arterial hypertension?\n\na) you suspect they won't attend follow-up appointments\nb) over 65 years old\nc) systolic blood pressure above 155 mmHg\nd) not willing to change their lifestyle\ne) diastolic blood pressure above 95 mmHg",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "289",
+        "top_reference": "Whelton PK, Carey RM, Aronow WS, et al. 2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults: A Report of the American College of Cardiology/American Heart Association Task Force on Clinical Practice Guidelines. J Am Coll Cardiol. 2018;71(19."
+      },
+      {
+        "row": 198,
+        "rank": 391,
+        "question": "17. Determine which heart chamber has the correctly stated normal pressure value.\na. The mean pressure in the right atrium is 1–5 mmHg\nb. The systolic pressure in the pulmonary artery is 35–45 mmHg\nc. The pulmonary capillary wedge (occlusion) pressure is 20–25 mmHg\nd. The left ventricular end-diastolic pressure is 15–20 mmHg\ne. The left ventricular end-diastolic pressure is 50–80 mmHg",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "175",
+        "top_reference": "Cardiovascular Disease and Risk Management: Standards of Care in Diabetes—2024. Diabetes Care 2024"
+      },
+      {
+        "row": 80,
+        "rank": 390,
+        "question": "When do you not introduce an antihypertensive drug and try to lower blood pressure non-pharmacologically? a) in young people\nb) in mild arterial hypertension\nc) in the elderly\nd) in patients with organ damage\ne) in patients with diabetes mellitus",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "289",
+        "top_reference": "Hypertensive Emergency - StatPearls - NCBI Bookshelf"
+      },
+      {
+        "row": 65,
+        "rank": 388,
+        "question": "6.  The cause of epigastric pain can be outside of the abdomen:\nA. cerebrovascular insult (stroke)\nB. fracture of the first lumbar vertebra\nC. inferior wall myocardial infarction (MI)\nD. nephrolithiasis\nE. ectopic pregnancy",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "17",
+        "top_reference": "Thygesen, K., Alpert, J. S., Jaffe, A. S., Chaitman, B. R., Bax, J. J., Morrow, D. A., ... & White, H. D. (2018). Fourth universal definition of myocardial infarction (2018). Journal of the American College of Cardiology, 72(18),"
+      },
+      {
+        "row": 225,
+        "rank": 388,
+        "question": "8. What are precancerous changes of the gastric mucosa?\na) atrophic gastritis\nb) intestinal metaplasia\nc) adenomatous polyp\nd) endocrine cell hyperplasia\n\nA) a, b\nB) a, b, c\nC) a, c\nD) b, c\nE) a, b, c, d",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "576",
+        "top_reference": "1. Aelvoet, A. S., Pellisé, M., Miedema, T. N., Daca-Alvarez, M., Bastiaansen, B. A. J., van Leerdam, M. E., Jover, R., Balaguer, F., Kaminski, M. F., Buttitta, F., Ricciardiello, L., Jespersen, N., Karstensen, J. G., Bossuyt, P. M. M., Latchford, A., Hompes, R., Dekker, E., & European FAP Consortium. (2024). Development of desmoid tumors after ileorectal anastomosis versus ileal pouch–anal anastomosis in familial adenomatous polyposis. Clinical Gastroenterology and Hepatology, 22(11), 2319–2326.\n2. Quinn, K. P., Lightner, A. L., Pendegraft, R. S., Enders, F. T., Boardman, L. A., & Raffals, L. E. (2016). Pouchitis is a common complication in patients with familial adenomatous polyposis following ileal pouch–anal anastomosis. Clinical Gastroenterology and Hepatology, 14(9), 1296–1301."
+      },
+      {
+        "row": 81,
+        "rank": 385,
+        "question": "When do you immediately introduce therapy for newly diagnosed hypertension?\n\na) measured blood pressure above 180/110 mmHg\nb) if the patient refuses to change their lifestyle habits\nc) if the patient has a family history of hypertension\nd) if the patient has a sedentary lifestyle\ne) if the patient is under stress",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "289",
+        "top_reference": "American College of Obstetricians and Gynecologists (ACOG) Practice Bulletin No. 195: Counseling About Contraception for Women With Medical Conditions (Reaffirmed 2021)."
+      },
+      {
+        "row": 174,
+        "rank": 382,
+        "question": "25. What is a common cause of secondary adrenal insufficiency?\na) Long-term glucocorticoid therapy\nb) Autoimmune destruction of adrenal cortex\nc) Adrenal tuberculosis\nd) Congenital adrenal hyperplasia\ne) Adrenal metastases",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "2",
+        "top_reference": "Harrison’s Principles of Internal Medicine, 20th ed."
+      },
+      {
+        "row": 113,
+        "rank": 375,
+        "question": "8. Which syndrome is characterized by medullary thyroid cancer, pheochromocytoma, and parathyroid hyperplasia?\na. MEN 1\nb. MEN 2A\nc. MEN 2B\nd. Li–Fraumeni syndrome\ne. Von Hippel–Lindau syndrome",
+        "expected_reference": "Strojan, P., & Hočevar, M. (Eds.). (2018). Onkologija: Učbenik za študente medicine [Oncology: Textbook for medical students] (1st ed.). Onkološki inštitut Ljubljana.",
+        "expected_page": "413",
+        "top_reference": "Weber Syndrome - StatPearls - NCBI Bookshelf"
+      },
+      {
+        "row": 89,
+        "rank": 325,
+        "question": "Which medications are most helpful in heart failure?\na) Calcium channel blockers\nb) Diuretics\nc) ACE inhibitors\nd) Beta-blockers\ne) Alpha-blockers",
+        "expected_reference": "Interna medicina (6. izd., str. XXXVIII, 1693). (2022). Medicinska fakulteta; Buča.",
+        "expected_page": "191",
+        "top_reference": "Roehrborn, C. G., & Schwinn, D. A. (2004). Alpha1-adrenergic receptors and their antagonists in the treatment of lower urinary tract symptoms and benign prostatic hyperplasia. Journal of Urology, 171(3),"
+      }
+    ]
+  },
+  "dataset": {
+    "questions": 420,
+    "unique_contexts": 406,
+    "unique_references": 169,
+    "missing_type": 270
+  }
+}

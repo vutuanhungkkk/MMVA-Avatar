@@ -22,6 +22,7 @@
 
 - [✨ Key Features](#-key-features)
 - [🛠️ Technology Stack](#️-technology-stack)
+- [📊 RAG Evaluation](#-rag-evaluation)
 - [🚀 Quickstart Guide](#-quickstart-guide)
   - [Option A: Local Installation (No Docker)](#option-a-local-installation-no-docker)
   - [Option B: Docker Deployment (Recommended) 🐳](#option-b-docker-deployment-recommended-)
@@ -55,6 +56,47 @@
 
 ---
 
+## 📊 RAG Evaluation
+
+The retrieval baseline was evaluated on the [**RAGCare-QA**](https://huggingface.co/datasets/ChatMED-Project/RAGCare-QA/tree/main) medical benchmark:
+
+- 420 medical questions
+- 406 unique supporting contexts
+- 169 normalized references
+- No missing questions, answers, contexts, references, or page citations
+
+### Overall retrieval results
+
+| Retriever | Recall@1 | Recall@3 | Recall@5 | Recall@10 | MRR | Median Rank |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Word TF-IDF | 62.62% | 81.90% | 84.52% | 88.81% | 0.7269 | 1 |
+| Hybrid word + character TF-IDF | **68.81%** | **83.57%** | **86.90%** | **90.48%** | **0.7707** | **1** |
+| MiniLM + Chroma (top 5) | 64.76% | 76.67% | 79.52% | — | 0.7092 | — |
+| MiniLM + Chroma top 20 + BGE reranker top 5 | 61.19% | 78.10% | 80.48% | — | 0.6925 | — |
+| **Weighted Hybrid RRF (production default)** | **69.29%** | 83.10% | **88.10%** | — | **0.7661** | — |
+| Weighted Hybrid RRF + BGE | 65.24% | 83.33% | 86.19% | — | 0.7382 | — |
+
+### Hybrid retrieval by question complexity
+
+| Complexity | Cases | Recall@1 | Recall@5 | MRR |
+| :--- | ---: | ---: | ---: | ---: |
+| Basic | 150 | 55.33% | 76.67% | 0.6536 |
+| Intermediate | 181 | 71.82% | 90.61% | 0.8023 |
+| Advanced | 89 | 85.39% | 96.63% | 0.9038 |
+
+Advanced questions contain more discriminative medical terminology, so their retrieval scores are higher even though they may be harder to answer. These results measure retrieval only and do not claim clinical answer correctness.
+
+The production default is now weighted Reciprocal Rank Fusion over MiniLM/Chroma top-20 and lexical top-20 (`dense=0.35`, `lexical=1.0`, `k=10`). It improves Recall@5 from 86.90% to 88.10% without changing the embedding model and averages **26.6 ms/query** for retrieval on an NVIDIA RTX 3060 Ti (excluding optional BGE reranking). BGE reranking remains available through `RAG_ENABLE_RERANKER=true`, but is disabled by default because it reduced Recall@5 to 86.19%, reduced MRR@5, and added about 284 ms per question on the benchmark.
+
+Run the reproducible offline evaluation without an API key or GPU:
+
+```bash
+python -m evals.evaluate_ragcare
+```
+
+See [the full RAGCare-QA report](evals/RAGCARE_REPORT.md) for methodology, limitations, pipeline slices, and failure analysis. Machine-readable results are available in [`evals/ragcare_results.json`](evals/ragcare_results.json).
+
+---
 ## 🚀 Quickstart Guide
 
 ### Option A: Local Installation (No Docker)

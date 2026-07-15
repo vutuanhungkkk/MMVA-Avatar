@@ -1,0 +1,2 @@
+{"question":"What is the documented allergy?","expected_source":"patient_record.pdf","retrieved":[{"source":"patient_record.pdf","page":1,"chunk":2},{"source":"first_aid.md","chunk":4}]}
+{"question":"What first aid is recommended for a minor burn?","expected_source":"first_aid.md","retrieved":[{"source":"first_aid.md","chunk":8},{"source":"patient_record.pdf","page":2,"chunk":5}]}

@@ -1,5 +1,8 @@
 const API_BASE = "http://localhost:8000";
-const WS_URL = "ws://localhost:8000/ws/chat";
+const WS_URL = API_BASE.replace(/^http/, "ws") + "/ws/chat";
+const SESSION_ID = localStorage.getItem("mmva_session_id") || crypto.randomUUID();
+localStorage.setItem("mmva_session_id", SESSION_ID);
+const sessionHeaders = { "X-Session-ID": SESSION_ID };
 
 let ws;
 let isGenerating = false;
@@ -30,14 +33,14 @@ btnApply.addEventListener('click', async () => {
     try {
         const res = await fetch(`${API_BASE}/api/config`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...sessionHeaders },
             body: JSON.stringify({ provider })
         });
-        
+
         if (res.ok) {
             setupStatus.textContent = "✅ Assistant is ready!";
             setupStatus.className = "status-msg success";
-            
+
             // Auto-trigger a hardcoded greeting from the assistant (Bypass LLM)
             setTimeout(() => {
                 const greeting = "Hi, I am your Health AI Assistant. How can I help you today?";
@@ -45,7 +48,7 @@ btnApply.addEventListener('click', async () => {
                 if (currentAssistantBubble) {
                     currentAssistantBubble.innerHTML = greeting;
                 }
-                
+
                 if (window.speakText) {
                     window.speakText(greeting);
                 }
@@ -62,7 +65,7 @@ btnApply.addEventListener('click', async () => {
 
 btnClear.addEventListener('click', async () => {
     try {
-        await fetch(`${API_BASE}/api/clear`, { method: 'POST' });
+        await fetch(`${API_BASE}/api/clear`, { method: 'POST', headers: sessionHeaders });
         chatHistory.innerHTML = '';
         currentImageBase64 = null;
         currentDocument = null;
@@ -85,7 +88,7 @@ function renderAttachmentPreview() {
     if (currentDocument) {
         attachmentPreview.innerHTML =
             `<span class="attachment-chip">
-                📎 ${currentDocument.name}
+                📎 ${currentDocument.displayName || currentDocument.name}
                 <button class="chip-remove-btn" title="Remove document" onclick="removeDocument('${currentDocument.name}')">✕</button>
             </span>`;
         return;
@@ -107,7 +110,7 @@ async function removeDocument(filename) {
     try {
         const res = await fetch(`${API_BASE}/api/remove_document`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...sessionHeaders },
             body: JSON.stringify({ filename })
         });
         if (!res.ok) {
@@ -134,12 +137,12 @@ function unlockAudio() {
 
 
 function connectWebSocket() {
-    ws = new WebSocket(WS_URL);
+    ws = new WebSocket(`${WS_URL}?session_id=${encodeURIComponent(SESSION_ID)}`);
     ws.onopen = () => { wsStatus.textContent = "Connected"; wsStatus.style.color = "#4CAF50"; };
     ws.onclose = () => { wsStatus.textContent = "Disconnected"; wsStatus.style.color = "#F44336"; setTimeout(connectWebSocket, 3000); };
-    
+
     let sentenceBuffer = "";
-    
+
     ws.onmessage = async (event) => {
         try {
             const data = JSON.parse(event.data);
@@ -147,19 +150,19 @@ function connectWebSocket() {
             if (data.type === "text_stream") {
                 const chunk = data.content;
                 if (currentAssistantBubble) {
-                    currentAssistantBubble.innerHTML += chunk.replace(/\n/g, '<br>');
+                    currentAssistantBubble.appendChild(document.createTextNode(chunk));
                     chatHistory.scrollTop = chatHistory.scrollHeight;
                 }
-                
+
                 sentenceBuffer += chunk;
-                
+
                 if (/[.!?\n]/.test(chunk)) {
                     if (window.speakText) {
                         window.speakText(sentenceBuffer);
                     }
-                    sentenceBuffer = ""; 
+                    sentenceBuffer = "";
                 }
-            } 
+            }
             else if (data.type === "done") {
                 isGenerating = false;
                 if (sentenceBuffer.trim() && window.speakText) {
@@ -186,7 +189,8 @@ function appendUserMessage(text, imgSrc = null) {
     if (imgSrc) {
         attachmentHtml = `<img src="${imgSrc}" style="max-width:100%; border-radius:8px; margin-bottom:8px;"><br>`;
     }
-    div.innerHTML = `${attachmentHtml}${text}`;
+    div.innerHTML = attachmentHtml;
+    div.appendChild(document.createTextNode(text));
     chatHistory.appendChild(div);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
@@ -201,7 +205,7 @@ function createAssistantBubble() {
 
 function sendMessage() {
     if (isGenerating || (!chatInput.value.trim() && !currentImageBase64)) return;
-    
+
     const prompt = chatInput.value.trim();
     appendUserMessage(prompt || (currentImageBase64 ? "[Image Attached]" : "[Document Attached]"), currentImageBase64);
     createAssistantBubble();
@@ -238,18 +242,18 @@ document.getElementById('pdf-upload').addEventListener('change', async e => {
     if (!file) return;
     const formData = new FormData();
     formData.append("pdf", file);
-    
+
     alert("📋 Uploading medical document...");
     try {
-        const res = await fetch(`${API_BASE}/api/process_pdf`, { method: "POST", body: formData });
+        const res = await fetch(`${API_BASE}/api/process_pdf`, { method: "POST", headers: sessionHeaders, body: formData });
+        const data = await res.json();
         if(res.ok) {
-            currentDocument = { name: file.name, type: file.type || file.name.split('.').pop() };
+            currentDocument = { name: data.document_id, displayName: file.name, type: file.type || file.name.split('.').pop() };
             currentImageBase64 = null;
             renderAttachmentPreview();
             alert("✅ Medical document indexed! You can now ask questions about it.");
         } else {
-            const err = await res.json();
-            alert("❌ Error: " + err.error);
+            alert("Upload failed: " + data.error);
         }
     } catch(err) { console.error(err); }
 });
@@ -294,7 +298,7 @@ btnRecord.addEventListener('click', async () => {
                 const formData = new FormData();
                 formData.append("audio", audioBlob, "voice.webm");
 
-                const res = await fetch(`${API_BASE}/api/transcribe`, { method: "POST", body: formData });
+                const res = await fetch(`${API_BASE}/api/transcribe`, { method: "POST", headers: sessionHeaders, body: formData });
                 const data = await res.json();
                 if (data.transcript) {
                     chatInput.value = data.transcript;
@@ -314,4 +318,4 @@ btnRecord.addEventListener('click', async () => {
         console.error("Microphone access error:", e);
         alert("❌ Could not access microphone. Please check your browser permissions.");
     }
-});
+});

@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    env:
+      ASSISTANT_RAG_ENABLED: "false"
+      PYTHONPATH: ".:./backend"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check backend tests evals
+      - run: pytest -q --cov=backend --cov=evals --cov-report=term-missing
+      - run: python -m evals.run_rag_eval evals/sample_retrieval_results.jsonl --min-recall 0.8
+      - run: bandit -q -r backend -x backend/assistant/tools
+      - run: pip-audit -r requirements.txt

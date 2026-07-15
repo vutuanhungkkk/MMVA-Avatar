@@ -1,8 +1,11 @@
+from typing import Literal
+
 from pydantic import BaseModel
 
+
 class ConfigRequest(BaseModel):
-    provider: str
-    # API keys are read from the .env file — no user input required
+    provider: Literal["deepseek", "openai", "anthropic", "google", "local"]
+
 
 class RemoveDocumentRequest(BaseModel):
     filename: str

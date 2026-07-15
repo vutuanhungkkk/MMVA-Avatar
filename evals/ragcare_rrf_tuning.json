@@ -1,0 +1,170 @@
+[
+  {
+    "dense_weight": 0.35,
+    "lexical_weight": 1.0,
+    "rank_constant": 10,
+    "recall@1": 0.6928571428571428,
+    "recall@5": 0.8809523809523809,
+    "mrr@5": 0.7660714285714286
+  },
+  {
+    "dense_weight": 0.1,
+    "lexical_weight": 1.0,
+    "rank_constant": 30,
+    "recall@1": 0.6761904761904762,
+    "recall@5": 0.8809523809523809,
+    "mrr@5": 0.7586904761904761
+  },
+  {
+    "dense_weight": 0.2,
+    "lexical_weight": 1.0,
+    "rank_constant": 10,
+    "recall@1": 0.6880952380952381,
+    "recall@5": 0.8785714285714286,
+    "mrr@5": 0.768531746031746
+  },
+  {
+    "dense_weight": 0.05,
+    "lexical_weight": 1.0,
+    "rank_constant": 60,
+    "recall@1": 0.6738095238095239,
+    "recall@5": 0.8785714285714286,
+    "mrr@5": 0.7569047619047619
+  },
+  {
+    "dense_weight": 0.1,
+    "lexical_weight": 1.0,
+    "rank_constant": 10,
+    "recall@1": 0.6880952380952381,
+    "recall@5": 0.8714285714285714,
+    "mrr@5": 0.7652777777777777
+  },
+  {
+    "dense_weight": 0.05,
+    "lexical_weight": 1.0,
+    "rank_constant": 10,
+    "recall@1": 0.6880952380952381,
+    "recall@5": 0.8714285714285714,
+    "mrr@5": 0.7640476190476191
+  },
+  {
+    "dense_weight": 0.1,
+    "lexical_weight": 1.0,
+    "rank_constant": 60,
+    "recall@1": 0.680952380952381,
+    "recall@5": 0.8714285714285714,
+    "mrr@5": 0.7554761904761905
+  },
+  {
+    "dense_weight": 0.2,
+    "lexical_weight": 1.0,
+    "rank_constant": 30,
+    "recall@1": 0.6904761904761905,
+    "recall@5": 0.8690476190476191,
+    "mrr@5": 0.7595238095238095
+  },
+  {
+    "dense_weight": 0.05,
+    "lexical_weight": 1.0,
+    "rank_constant": 30,
+    "recall@1": 0.6761904761904762,
+    "recall@5": 0.8690476190476191,
+    "mrr@5": 0.7583730158730159
+  },
+  {
+    "dense_weight": 0.5,
+    "lexical_weight": 1.0,
+    "rank_constant": 10,
+    "recall@1": 0.6928571428571428,
+    "recall@5": 0.8595238095238096,
+    "mrr@5": 0.7606746031746032
+  },
+  {
+    "dense_weight": 0.75,
+    "lexical_weight": 1.0,
+    "rank_constant": 10,
+    "recall@1": 0.6857142857142857,
+    "recall@5": 0.8571428571428571,
+    "mrr@5": 0.7531349206349206
+  },
+  {
+    "dense_weight": 0.35,
+    "lexical_weight": 1.0,
+    "rank_constant": 30,
+    "recall@1": 0.6857142857142857,
+    "recall@5": 0.8476190476190476,
+    "mrr@5": 0.7507142857142857
+  },
+  {
+    "dense_weight": 0.2,
+    "lexical_weight": 1.0,
+    "rank_constant": 60,
+    "recall@1": 0.6904761904761905,
+    "recall@5": 0.8428571428571429,
+    "mrr@5": 0.7512698412698413
+  },
+  {
+    "dense_weight": 1.0,
+    "lexical_weight": 1.0,
+    "rank_constant": 10,
+    "recall@1": 0.6857142857142857,
+    "recall@5": 0.8428571428571429,
+    "mrr@5": 0.7481349206349206
+  },
+  {
+    "dense_weight": 0.75,
+    "lexical_weight": 1.0,
+    "rank_constant": 30,
+    "recall@1": 0.680952380952381,
+    "recall@5": 0.8404761904761905,
+    "mrr@5": 0.7436904761904762
+  },
+  {
+    "dense_weight": 0.75,
+    "lexical_weight": 1.0,
+    "rank_constant": 60,
+    "recall@1": 0.680952380952381,
+    "recall@5": 0.8404761904761905,
+    "mrr@5": 0.7435714285714285
+  },
+  {
+    "dense_weight": 0.35,
+    "lexical_weight": 1.0,
+    "rank_constant": 60,
+    "recall@1": 0.6880952380952381,
+    "recall@5": 0.8357142857142857,
+    "mrr@5": 0.7476587301587302
+  },
+  {
+    "dense_weight": 0.5,
+    "lexical_weight": 1.0,
+    "rank_constant": 30,
+    "recall@1": 0.6833333333333333,
+    "recall@5": 0.8357142857142857,
+    "mrr@5": 0.746031746031746
+  },
+  {
+    "dense_weight": 0.5,
+    "lexical_weight": 1.0,
+    "rank_constant": 60,
+    "recall@1": 0.6833333333333333,
+    "recall@5": 0.8357142857142857,
+    "mrr@5": 0.7457936507936508
+  },
+  {
+    "dense_weight": 1.0,
+    "lexical_weight": 1.0,
+    "rank_constant": 30,
+    "recall@1": 0.6857142857142857,
+    "recall@5": 0.8261904761904761,
+    "mrr@5": 0.7427777777777778
+  },
+  {
+    "dense_weight": 1.0,
+    "lexical_weight": 1.0,
+    "rank_constant": 60,
+    "recall@1": 0.6857142857142857,
+    "recall@5": 0.8261904761904761,
+    "mrr@5": 0.7427777777777778
+  }
+]

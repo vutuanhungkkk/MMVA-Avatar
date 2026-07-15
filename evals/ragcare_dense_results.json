@@ -1,0 +1,45 @@
+{
+  "environment": {
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 3060 Ti",
+    "questions": 420,
+    "contexts": 406,
+    "candidate_k": 20
+  },
+  "timing_seconds": {
+    "dense_index": 2.0448323000164237,
+    "lexical_index": 2.5436364999914076,
+    "retrieve_all": 11.18959769999492,
+    "retrieve_per_question": 0.02664189928570219,
+    "rerank_all": 119.26606389999506,
+    "rerank_per_question": 0.283966818809512
+  },
+  "minilm_chroma": {
+    "cases": 420,
+    "recall@1": 0.6476190476190476,
+    "recall@3": 0.7666666666666667,
+    "recall@5": 0.7952380952380952,
+    "mrr@5": 0.7092063492063492
+  },
+  "lexical_hybrid": {
+    "cases": 420,
+    "recall@1": 0.6880952380952381,
+    "recall@3": 0.8357142857142857,
+    "recall@5": 0.8690476190476191,
+    "mrr@5": 0.7635714285714286
+  },
+  "rrf": {
+    "cases": 420,
+    "recall@1": 0.6928571428571428,
+    "recall@3": 0.830952380952381,
+    "recall@5": 0.8809523809523809,
+    "mrr@5": 0.7660714285714286
+  },
+  "rrf_bge": {
+    "cases": 420,
+    "recall@1": 0.6523809523809524,
+    "recall@3": 0.8333333333333334,
+    "recall@5": 0.861904761904762,
+    "mrr@5": 0.7381746031746032
+  }
+}
